@@ -1,0 +1,78 @@
+{
+  "entities": {
+    "Mod": {
+      "title": "Mod",
+      "description": "A MultiCraft mod or texture pack listing",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the mod"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 100,
+          "description": "The name of the mod"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 5000,
+          "description": "Detailed description of features, installation, and dependencies"
+        },
+        "fileUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "Google Cloud Storage URL of the .zip mod file"
+        },
+        "screenshotUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "Google Cloud Storage URL of the screenshot image"
+        },
+        "category": {
+          "type": "string",
+          "enum": ["texture", "script", "world", "mobs", "tools", "weather"],
+          "description": "Categorization of the mod"
+        },
+        "author": {
+          "type": "string",
+          "description": "Name or handle of the mod creator"
+        },
+        "rating": {
+          "type": "number",
+          "description": "The community rating out of 5.0"
+        },
+        "downloads": {
+          "type": "number",
+          "description": "Total number of times downloaded"
+        },
+        "fileSize": {
+          "type": "string",
+          "description": "Human-readable file size (e.g. 14.2 MB)"
+        },
+        "version": {
+          "type": "string",
+          "description": "The version of the mod (e.g. v1.2.4)"
+        },
+        "isFeatured": {
+          "type": "boolean",
+          "description": "Whether the mod is featured on the home page"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when the mod was listed"
+        }
+      },
+      "required": ["name", "description", "fileUrl", "screenshotUrl", "category", "author", "rating", "downloads", "fileSize", "version", "isFeatured", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/mods/{modId}": {
+      "schema": "Mod",
+      "description": "Collection of all published mods and texture packs"
+    }
+  }
+}

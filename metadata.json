@@ -1,0 +1,6 @@
+{
+  "name": "MultiCraft Mods",
+  "description": "A central hub for the MultiCraft community to browse, download, and manage mods and texture packs, featuring an admin panel for content updates.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

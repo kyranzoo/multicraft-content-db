@@ -1,0 +1,47 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to validate custom document IDs
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 64 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Validation helper for Mod entities
+    function isValidMod(data) {
+      return data.name is string && data.name.size() >= 3 && data.name.size() <= 100
+          && data.description is string && data.description.size() >= 10 && data.description.size() <= 5000
+          && data.fileUrl is string && data.fileUrl.size() > 0 && data.fileUrl.size() <= 2000
+          && data.screenshotUrl is string && data.screenshotUrl.size() > 0 && data.screenshotUrl.size() <= 2000
+          && data.category is string && data.category in ['texture', 'script', 'world', 'mobs', 'tools', 'weather']
+          && data.author is string && data.author.size() > 0 && data.author.size() <= 100
+          && data.rating is number
+          && data.downloads is number
+          && data.fileSize is string && data.fileSize.size() > 0 && data.fileSize.size() <= 50
+          && data.version is string && data.version.size() > 0 && data.version.size() <= 30
+          && data.isFeatured is bool;
+    }
+
+    // Only allow Kyranzo (admin) to make modifications
+    function isAdmin() {
+      return request.auth != null && request.auth.token.email == 'kyranzo.error@gmail.com';
+    }
+
+    match /mods/{modId} {
+      allow read: if true;
+      
+      allow create: if isAdmin() 
+                    && isValidId(modId)
+                    && request.resource.data.keys().hasAll(['name', 'description', 'fileUrl', 'screenshotUrl', 'category', 'author', 'rating', 'downloads', 'fileSize', 'version', 'isFeatured', 'createdAt'])
+                    && request.resource.data.keys().size() == 12
+                    && isValidMod(request.resource.data);
+                    
+      allow update: if isAdmin()
+                    && isValidId(modId)
+                    && isValidMod(request.resource.data);
+                    
+      allow delete: if isAdmin()
+                    && isValidId(modId);
+    }
+  }
+}
